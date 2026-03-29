@@ -1,0 +1,4 @@
+.git
+*.md
+!.claude/CLAUDE.md
+.claude/plugins/telegram/node_modules
