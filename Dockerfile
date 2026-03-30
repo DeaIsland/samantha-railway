@@ -42,4 +42,4 @@ WORKDIR /workspace
 #   ANTHROPIC_API_KEY
 #   TELEGRAM_BOT_TOKEN
 
-CMD ["claude", "--channels", "plugin:telegram@claude-plugins-official", "--dangerously-skip-permissions"]
+CMD ["su", "-c", "claude --channels plugin:telegram@claude-plugins-official --dangerously-skip-permissions", "claude"]
