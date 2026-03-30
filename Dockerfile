@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y curl ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Claude Code globally
-RUN npm install -g @anthropic-ai/claude-code@latest
+RUN npm install -g @anthropic-ai/claude-code@stable
 
 # Create non-root user
 RUN useradd -m -s /bin/bash claude
