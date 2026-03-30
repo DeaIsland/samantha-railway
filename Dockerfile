@@ -33,13 +33,12 @@ COPY .claude/plugins/telegram/ /home/claude/.claude/plugins/cache/claude-plugins
 WORKDIR /home/claude/.claude/plugins/cache/claude-plugins-official/telegram/0.0.4
 RUN bun install --no-summary
 
-RUN chown -R claude:claude /home/claude/.claude
+RUN mkdir -p /workspace && chown -R claude:claude /home/claude/.claude /workspace
 USER claude
-
 WORKDIR /workspace
 
 # Required env vars (set in Railway dashboard):
 #   ANTHROPIC_API_KEY
 #   TELEGRAM_BOT_TOKEN
 
-CMD ["su", "-c", "claude --channels plugin:telegram@claude-plugins-official --dangerously-skip-permissions", "claude"]
+CMD ["claude", "--channels", "plugin:telegram@claude-plugins-official", "--dangerously-skip-permissions"]
