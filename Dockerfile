@@ -9,26 +9,32 @@ RUN apt-get update && apt-get install -y curl ca-certificates && \
 # Install Claude Code globally
 RUN npm install -g @anthropic-ai/claude-code@latest
 
+# Create non-root user
+RUN useradd -m -s /bin/bash claude
+
 # Create .claude directory structure
 RUN mkdir -p \
-    /root/.claude/channels/telegram/approved \
-    /root/.claude/channels/telegram/inbox \
-    /root/.claude/plugins/cache/claude-plugins-official/telegram/0.0.4/skills \
-    /root/.claude/learning/context \
-    /root/.claude/learning/digests
+    /home/claude/.claude/channels/telegram/approved \
+    /home/claude/.claude/channels/telegram/inbox \
+    /home/claude/.claude/plugins/cache/claude-plugins-official/telegram/0.0.4/skills \
+    /home/claude/.claude/learning/context \
+    /home/claude/.claude/learning/digests
 
 # Copy .claude config
-COPY .claude/settings.json /root/.claude/settings.json
-COPY .claude/CLAUDE.md /root/.claude/CLAUDE.md
-COPY .claude/channels/telegram/access.json /root/.claude/channels/telegram/access.json
-COPY .claude/plugins/installed_plugins.json /root/.claude/plugins/installed_plugins.json
-COPY .claude/learning/hot.md /root/.claude/learning/hot.md
-COPY .claude/learning/context/general.md /root/.claude/learning/context/general.md
+COPY .claude/settings.json /home/claude/.claude/settings.json
+COPY .claude/CLAUDE.md /home/claude/.claude/CLAUDE.md
+COPY .claude/channels/telegram/access.json /home/claude/.claude/channels/telegram/access.json
+COPY .claude/plugins/installed_plugins.json /home/claude/.claude/plugins/installed_plugins.json
+COPY .claude/learning/hot.md /home/claude/.claude/learning/hot.md
+COPY .claude/learning/context/general.md /home/claude/.claude/learning/context/general.md
 
 # Copy and build the telegram plugin
-COPY .claude/plugins/telegram/ /root/.claude/plugins/cache/claude-plugins-official/telegram/0.0.4/
-WORKDIR /root/.claude/plugins/cache/claude-plugins-official/telegram/0.0.4
+COPY .claude/plugins/telegram/ /home/claude/.claude/plugins/cache/claude-plugins-official/telegram/0.0.4/
+WORKDIR /home/claude/.claude/plugins/cache/claude-plugins-official/telegram/0.0.4
 RUN bun install --no-summary
+
+RUN chown -R claude:claude /home/claude/.claude
+USER claude
 
 WORKDIR /workspace
 
